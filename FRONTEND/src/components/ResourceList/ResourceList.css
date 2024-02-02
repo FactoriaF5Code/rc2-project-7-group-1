@@ -30,7 +30,8 @@
   justify-content: space-between;
 }
 
-.elementContainer:hover .deleteButton {
+.elementContainer:hover .deleteButton,
+.elementContainer:hover .editButton {
   display: block;
 }
 
@@ -40,7 +41,13 @@
   padding-left: 2rem;
 }
 
-.deleteButton {
+.buttonContainer {
+  display: flex;
+  gap: 2rem;
+}
+
+.deleteButton,
+.editButton {
   display: none;
   height: 8.5rem;
   width: 8.5rem;

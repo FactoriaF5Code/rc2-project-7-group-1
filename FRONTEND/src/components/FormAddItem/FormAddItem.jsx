@@ -1,27 +1,45 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react/prop-types */
 import "./FormAddItem.css";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import {useNavigate, useParams} from "react-router-dom";
 
 export const FormAddItem = ({ setNeedsReload }) => {
   const [newItemTitle, setNewItemTitle] = useState("");
   const [newItemUrl, setNewItemUrl] = useState("");
+  const { id } = useParams();
+  const navigate = useNavigate();
 
   const URL = "http://localhost:9000/items";
+
+  useEffect(()=>{
+    if(id) {
+      fetch(`${URL}/${id}`)
+      .then((response)=>response.json())
+      .then((data)=>{
+        setNewItemTitle(data.title || "");
+        setNewItemUrl(data.url || "")
+      })
+      .catch((error)=> console.error('Error fetching item data', error))
+    }
+  }, [id]);
 
   const postItem = (e) => {
     e.preventDefault();
 
     const options = {
-      method: "POST",
+      method: id ? "PUT": "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ title: newItemTitle, url: newItemUrl }),
     };
-    fetch(URL, options).then((response) => {
+    fetch(id ? `${URL}/${id}` : URL, options).then((response) => {
       if (response.ok) {
         setNewItemTitle("");
         setNewItemUrl("");
         setNeedsReload(true);
+
+        navigate("/");
+        console.log("Item saved sucessfully.");
       }
     });
   };
@@ -48,11 +66,11 @@ export const FormAddItem = ({ setNeedsReload }) => {
         </div>
         <div className="buttonAddContainer">
           <button className="buttonAddText">
-            Añadir
+            {id ? "Actualizar" : "Añadir"}
             <input
               disabled={newItemTitle === ""}
               type="submit"
-              value="+"
+              value={id ? "S": "+"}
               className="buttonAdd"
             />
           </button>
