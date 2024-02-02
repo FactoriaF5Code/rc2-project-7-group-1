@@ -1,31 +1,34 @@
 package group1.backend.controllers;
 
-
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import group1.backend.persistence.Item;
 import group1.backend.persistence.ItemRepository;
 
 
-
 @RestController
-@CrossOrigin(origins = "http://localhost:5173")
+@CrossOrigin(origins = "http://localhost:5173", methods = { RequestMethod.GET, RequestMethod.PUT })
+
 public class ItemController {
 
     private ItemRepository repository;
     private DeleteItem deleteItem;
-    
-    public ItemController(@Autowired ItemRepository repository,  @Autowired DeleteItem deleteItem) {
+
+    public ItemController(@Autowired ItemRepository repository, @Autowired DeleteItem deleteItem) {
         this.repository = repository;
         this.deleteItem = deleteItem;
     }
@@ -56,4 +59,33 @@ public class ItemController {
             return "Error, the user with " + id + " was not found";
         }
     }
+
+    @PutMapping("items/{id}")
+    public ResponseEntity<ItemResponse> updateItem(@PathVariable Long id, @RequestBody ItemRequest updatedItem) {
+        Optional<Item> optionalItem = repository.findById(id);
+        if (optionalItem.isPresent()) {
+            Item existingItem = optionalItem.get();
+            existingItem.setTitle(updatedItem.getTitle());
+            existingItem.setUrl(updatedItem.getUrl());
+            Item updatedItemEntity = repository.save(existingItem);
+            ItemResponse itemResponse = new ItemResponse(updatedItemEntity.getId(), updatedItemEntity.getTitle(),
+                    updatedItemEntity.getUrl());
+            return ResponseEntity.ok(itemResponse);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping("/items/{id}")
+    public ResponseEntity<ItemResponse> getItemById(@PathVariable Long id) {
+        Optional<Item> optionalItem = repository.findById(id);
+        if (optionalItem.isPresent()) {
+            Item item = optionalItem.get();
+            ItemResponse itemResponse = new ItemResponse(item.getId(), item.getTitle(), item.getUrl());
+            return ResponseEntity.ok(itemResponse);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
 }

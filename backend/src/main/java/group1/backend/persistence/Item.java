@@ -7,13 +7,25 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name="items")
+@Table(name = "items")
 public class Item {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String title;
     private String url;
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
 
     public Item() {
 
@@ -24,7 +36,7 @@ public class Item {
         this.title = title;
         this.url = url;
     }
-    
+
     public Long getId() {
         return id;
     }
@@ -37,11 +49,4 @@ public class Item {
         return url;
     }
 
-
-    
-
-
-
-    
-    
 }
