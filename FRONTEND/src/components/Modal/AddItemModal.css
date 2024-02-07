@@ -1,0 +1,47 @@
+.containerOpenModal {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.title {
+  font-family: var(--fontTitles);
+  color: var(--orange);
+  font-size: 5.2rem;
+  text-align: center;
+}
+
+.buttonAddText {
+  background-color: var(--aquamarine);
+  border: none;
+  border-radius: 5rem;
+  color: var(--white);
+  font-family: var(--font);
+  font-size: 4rem;
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  align-self: end;
+  height: 10rem;
+  width: 43rem;
+  padding-left: 4rem;
+}
+
+.buttonAdd {
+  background-color: var(--orange);
+  border: none;
+  cursor: pointer;
+  color: var(--darkblue);
+  font-family: var(--font);
+  font-size: 8rem;
+  height: 9rem;
+  width: 9rem;
+  border-radius: 50%;
+  margin-right: 0.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
